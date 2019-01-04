@@ -1,6 +1,8 @@
-## Monotone spline based on ``Accurate Monotonicity Preserving Cubic Interpolation'' [paper](https://epubs-siam-org.proxy.lib.utk.edu/doi/pdf/10.1137/0904045)
+## Monotone spline function C++
 
-$x$ is monotone increasing
+Based on ``Accurate Monotonicity Preserving Cubic Interpolation'' [paper](https://epubs-siam-org.proxy.lib.utk.edu/doi/pdf/10.1137/0904045)
+
+*x* is monotone increasing
 
 To compile:
 
