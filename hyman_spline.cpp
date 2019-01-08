@@ -29,12 +29,10 @@ std::vector<double> spline(std::vector<double> x, std::vector<double> y, std::ve
         dx[i] = x[i+1] - x[i];
         dy = y[i+1] - y[i];
         S[i] = dy / dx[i];
-        std::cout << i << "\t" << x[i] << "\t" << x[i+1] <<  "\tS[i] "<< S[i] <<  std::endl;
     }
 
     S[n-1] = S[n-2];
 
-    std::cout << "2" << std::endl << std::flush;
 
     // dy/dx or f_dot approximation
     std::vector<double> f_dot(n);
@@ -55,25 +53,20 @@ std::vector<double> spline(std::vector<double> x, std::vector<double> y, std::ve
             S_i_min = std::min(S[i], S[i-1]);
             S_i_max = std::max(S[i], S[i-1]); 
         
-            std::cout << S_i_min << "\t" << S_i_max << std::endl;
             f_dot_i = 3*S_i_min * S_i_max / (S_i_max + 2*S_i_max); // ( dx[i-2]*S[i-1] + dx[i-1]*S[i-2] ) / ( x[i] - x[i-2]  );
         }
         
         // Hyman filter: eqn 2.6
         double sigma = sign(f_dot_i);
-        std::cout << "i=" << i <<  "\tf_dot_i= " << f_dot_i << "\tsigma= " << sigma << std::endl;
         if(sigma > 0.0){
             f_dot_i = std::min( std::max(0.0, f_dot_i),  3*std::min(fabs(S[i-1]), fabs(S[i])) );
         } 
         else{
             f_dot_i = std::max( std::min(0.0, f_dot_i), -3*std::min(fabs(S[i-1]), fabs(S[i])) );
         }
-
         f_dot[i] = f_dot_i;
     }
     
-    std::cout << "3" << std::endl << std::flush;
-
     // evalute
     int t_n = t.size();
     std::vector<double> P(t_n);
@@ -82,12 +75,9 @@ std::vector<double> spline(std::vector<double> x, std::vector<double> y, std::ve
     double c1, c2, c3, c4, p;
 
     for(j=0; j<t_n; j++){
-
         // x[i] <= t[j] < x[i+1]
         t_j = t[j];
         i = std::lower_bound(x.begin(), x.end(), t_j) - x.begin() -1;
-
-        std::cout << "j=" << j << "\ti=" << i << "\tt_i=" << t_j << "\tx_i=" << x[i] << std::endl << std::flush;
 
         c1 = y[i];
         c2 = f_dot[i];
@@ -97,7 +87,6 @@ std::vector<double> spline(std::vector<double> x, std::vector<double> y, std::ve
 
         P[j] = p;
     }
-
     return P;
 }
 
@@ -106,8 +95,6 @@ int main(){
     std::vector<double> y = {0, 2.76429E-05, 0.0437498, 0.169183, 0.469428, 0.94374, 0.998636, 0.999919, 0.999994};
     std::vector<double> t = {8.0, 8.20, 9.0, 10.2, 12.2, 16.0, 17.0, 18.0};
     
-    std::cout << "1" << std::endl << std::flush;
-
     std::vector<double> P = spline(x, y, t);
 
     int n = P.size();
